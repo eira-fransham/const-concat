@@ -16,6 +16,8 @@ const PLACE: &str = "world";
 const HELLO_WORLD: &str = concat!(GREETING, ", ", PLACE, "!");
 ```
 
+This produces the error:
+
 ```
 error: expected a literal
  --> src/main.rs:3:35
@@ -71,7 +73,12 @@ trait ConcatHack {
     const B_LEN: usize;
 }
 
-pub const unsafe fn concat<C: ConcatHack>(a: &[u8], b: &[u8]) -> [u8; C::A_LEN + C::B_LEN]
+pub const unsafe fn concat<C>(
+    a: &[u8],
+    b: &[u8],
+) -> [u8; C::A_LEN + C::B_LEN]
+where
+    C: ConcatHack,
 {
     #[repr(C)]
     #[derive(Copy, Clone)]
@@ -84,7 +91,7 @@ pub const unsafe fn concat<C: ConcatHack>(a: &[u8], b: &[u8]) -> [u8; C::A_LEN +
 }
 ```
 
-This doesn't work though, because [type parameters are not respected in fixed-size array lengths][fixed-size-length-problems]. So instead we use type parameters.
+This doesn't work though, because [type parameters are not respected when calculating fixed-size array lengths][fixed-size-length-problems]. So instead we use individual type parameters for each constant-size array.
 
 [fixed-size-length-problems]: https://github.com/rust-lang/rust/issues/43408#issuecomment-318258935
 
@@ -129,6 +136,10 @@ macro_rules! const_concat {
 
 So first we create a `&'static [u8]` and then we transmute it to `&'static str`. This works for now because `&[u8]` and `&str` have the same layout, but it's not guaranteed to work forever. The cast to `&'static [u8]` works even though the right-hand side of that assignment is local to this scope because of something called ["rvalue static promotion"][rv-static-promotion].
 
-This currently doesn't work in trait associated constants. I do have a way to support trait associated constants but again, you can't access type parameters in array lengths.
+This currently doesn't work in trait associated constants. I do have a way to support trait associated constants but again, you can't access type parameters in array lengths so that unfortunately doesn't work. Finally, it requires quite a few nightly features:
+
+```rust
+#![feature(const_fn, const_str_as_bytes, const_str_len, const_let, untagged_unions)]
+```
 
 [rv-static-promotion]: https://github.com/rust-lang/rfcs/blob/master/text/1414-rvalue_static_promotion.md
