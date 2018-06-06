@@ -65,7 +65,7 @@ where
 }
 ```
 
-So what we do is convert both the (arbitrarily-sized) input arrays to pointers to constant-size arrays, then dereference them. This is wildly unsafe - there's nothing saying that `a.len()` is the same as the length of the `First` type parameter. We put them next to one another in a `#[repr(C)]` tuple struct - this essentially concatenates them together in memory. Finally, we transmute it to the `Out` type parameter. If `First` is `[u8; N0]` and `Second` is `[u8; N1]` then `Out` should be `[u8; N0 + N1]`. Why not just use a trait with associated constants? Well, here's an example of what that would look like:
+So what we do is convert both the (arbitrarily-sized) input arrays to pointers to constant-size arrays (well, actually to pointer-to-`First` and pointer-to-`Second`, but the intent is that `First` and `Second` are fixed-size arrays). Then, we dereference them. This is wildly unsafe - there's nothing saying that `a.len()` is the same as the length of the `First` type parameter. We put them next to one another in a `#[repr(C)]` tuple struct - this essentially concatenates them together in memory. Finally, we transmute it to the `Out` type parameter. If `First` is `[u8; N0]` and `Second` is `[u8; N1]` then `Out` should be `[u8; N0 + N1]`. Why not just use a trait with associated constants? Well, here's an example of what that would look like:
 
 ```rust
 trait ConcatHack {
