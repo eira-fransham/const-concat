@@ -136,6 +136,8 @@ macro_rules! const_concat {
 
 So first we create a `&'static [u8]` and then we transmute it to `&'static str`. This works for now because `&[u8]` and `&str` have the same layout, but it's not guaranteed to work forever. The cast to `&'static [u8]` works even though the right-hand side of that assignment is local to this scope because of something called ["rvalue static promotion"][rv-static-promotion].
 
+The eagle-eyed among you may have also noticed that `&[u8; N]` and `&[u8]` have different sizes, since the latter is a fat pointer. Well my constant `transmute` doesn't check size (union fields can have different sizes) and for now the layout of both of these types puts the pointer first. There's no way to fix that on the current version of the compiler, since `&slice[..]` isn't implemented for constant expressions.
+
 This currently doesn't work in trait associated constants. I do have a way to support trait associated constants but again, you can't access type parameters in array lengths so that unfortunately doesn't work. Finally, it requires quite a few nightly features:
 
 ```rust
