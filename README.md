@@ -144,4 +144,26 @@ This currently doesn't work in trait associated constants. I do have a way to su
 #![feature(const_fn, const_str_as_bytes, const_str_len, const_let, untagged_unions)]
 ```
 
+## UPDATE
+
+I fixed the issue where the transmute relies on the pointer in `&[u8]` being first by instead transmuting a pointer to the first element of the array. The code now looks like so:
+
+```rust
+pub const unsafe fn concat<First, Second, Out>(a: &[u8], b: &[u8]) -> Out
+where
+    First: Copy,
+    Second: Copy,
+    Out: Copy,
+{
+    #[repr(C)]
+    #[derive(Copy, Clone)]
+    struct Both<A, B>(A, B);
+
+    let arr: Both<First, Second> =
+        Both(*transmute::<_, &First>(&a[0]), *transmute::<_, &Second>(&b[0]));
+
+    transmute(arr)
+}
+```
+
 [rv-static-promotion]: https://github.com/rust-lang/rfcs/blob/master/text/1414-rvalue_static_promotion.md

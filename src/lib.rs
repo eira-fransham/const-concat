@@ -21,7 +21,7 @@ where
     struct Both<A, B>(A, B);
 
     let arr: Both<First, Second> =
-        Both(*transmute::<_, &First>(a), *transmute::<_, &Second>(b));
+        Both(*transmute::<_, &First>(&a[0]), *transmute::<_, &Second>(&b[0]));
 
     transmute(arr)
 }
