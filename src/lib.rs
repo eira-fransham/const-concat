@@ -28,6 +28,12 @@ where
 
 #[macro_export]
 macro_rules! const_concat {
+    () => {
+        ""
+    };
+    ($a:expr) => {
+        $a
+    };
     ($a:expr, $b:expr) => {{
         let bytes: &'static [u8] = unsafe {
             &$crate::concat::<
@@ -44,7 +50,7 @@ macro_rules! const_concat {
         const_concat!($a, TAIL)
     }};
     ($a:expr, $($rest:expr),*,) => {
-        const_concat!($a, $($rest),*);
+        const_concat!($a, $($rest),*)
     };
 }
 
