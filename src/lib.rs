@@ -1,4 +1,4 @@
-#![feature(const_fn, const_str_as_bytes, const_str_len, const_let, untagged_unions)]
+#![feature(const_fn, const_fn_union, const_str_as_bytes, const_str_len, const_let, untagged_unions)]
 
 #[allow(unions_with_drop_fields)]
 pub const unsafe fn transmute<From, To>(from: From) -> To {
@@ -20,8 +20,10 @@ where
     #[derive(Copy, Clone)]
     struct Both<A, B>(A, B);
 
-    let arr: Both<First, Second> =
-        Both(*transmute::<_, &First>(&a[0]), *transmute::<_, &Second>(&b[0]));
+    let arr: Both<First, Second> = Both(
+        *transmute::<_, &First>(&a[0]),
+        *transmute::<_, &Second>(&b[0]),
+    );
 
     transmute(arr)
 }
