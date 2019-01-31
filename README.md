@@ -1,3 +1,6 @@
+[![Docs Status](https://docs.rs/const-concat/badge.svg)](https://docs.rs/const-concat)
+[![Crates.io](https://img.shields.io/crates/v/const-concat.svg)](https://crates.io/crates/const-concat)
+
 # Const string concatenation
 
 Rust has some great little magic built-in macros that you can use. A particularly-helpful one for building up paths and other text at compile-time is `concat!`. This takes two strings and returns the concatenation of them:
@@ -35,6 +38,8 @@ error: expected a literal
 Well with `const_concat!` you can! It works just like the `concat!` macro:
 
 ```rust
+#![feature(const_str_len,const_str_as_bytes)]
+
 #[macro_use]
 extern crate const_concat;
 

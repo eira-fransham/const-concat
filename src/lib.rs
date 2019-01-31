@@ -1,4 +1,27 @@
-#![feature(const_fn, const_fn_union, const_str_as_bytes, const_str_len, const_let, untagged_unions)]
+/*!
+# const-concat
+
+const-concat is a macro to concatenate a const in the declaration of another const.
+
+## Usage
+
+```rust,nobuild
+#![feature(const_str_len,const_str_as_bytes)]
+
+#[macro_use]
+extern crate const_concat;
+
+const GREETING: &str = "Hello";
+const PLACE: &str = "world";
+const HELLO_WORLD: &str = const_concat!(GREETING, ", ", PLACE, "!");
+
+fn main() {
+    assert_eq!(HELLO_WORLD, "Hello, world!");
+}
+```
+*/
+
+#![feature(const_fn, const_fn_union, const_str_as_bytes, const_str_len, untagged_unions)]
 
 #[allow(unions_with_drop_fields)]
 pub const unsafe fn transmute<From, To>(from: From) -> To {

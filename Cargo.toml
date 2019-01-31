@@ -1,8 +1,12 @@
 [package]
 name = "const-concat"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Jef <jackefransham@gmail.com>"]
 description = "Heinous hackery to concatenate constants"
 license = "Unlicense"
+edition = "2018"
+readme = "README.md"
+repository = "https://github.com/Vurich/const-concat"
+documentation = "https://docs.rs/const-concat"
 
 [dependencies]
