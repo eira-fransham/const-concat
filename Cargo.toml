@@ -1,6 +1,6 @@
 [package]
 name = "const-concat"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Jef <jackefransham@gmail.com>"]
 description = "Heinous hackery to concatenate constants"
 license = "Unlicense"

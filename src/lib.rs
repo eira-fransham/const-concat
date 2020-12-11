@@ -1,20 +1,17 @@
 #![feature(
     const_fn,
     const_fn_union,
-    const_str_as_bytes,
-    const_str_len,
     untagged_unions,
     const_raw_ptr_deref
 )]
 
-#[allow(unions_with_drop_fields)]
 pub const unsafe fn transmute<From, To>(from: From) -> To {
     union Transmute<From, To> {
-        from: From,
-        to: To,
+        from: std::mem::ManuallyDrop<From>,
+        to: std::mem::ManuallyDrop<To>,
     }
 
-    Transmute { from }.to
+    std::mem::ManuallyDrop::into_inner(Transmute { from: std::mem::ManuallyDrop::new(from) }.to)
 }
 
 pub const unsafe fn concat<First, Second, Out>(a: &[u8], b: &[u8]) -> Out
