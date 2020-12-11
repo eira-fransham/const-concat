@@ -95,7 +95,7 @@ This doesn't work though, because [type parameters are not respected when calcul
 
 [fixed-size-length-problems]: https://github.com/rust-lang/rust/issues/43408#issuecomment-318258935
 
-Wait, though, if you look at [the documentation for `std::mem::tranmute`][transmute] at the time of writing it's not a `const fn`. What's going on here then? Well, I wrote my own `transmute`:
+Wait, though, if you look at [the documentation for `std::mem::transmute`][transmute] at the time of writing it's not a `const fn`. What's going on here then? Well, I wrote my own `transmute`:
 
 [transmute]: https://doc.rust-lang.org/1.26.0/std/mem/fn.transmute.html
 
