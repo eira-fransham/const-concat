@@ -159,8 +159,10 @@ where
     #[derive(Copy, Clone)]
     struct Both<A, B>(A, B);
 
-    let arr: Both<First, Second> =
-        Both(*transmute::<_, &First>(&a[0]), *transmute::<_, &Second>(&b[0]));
+    let arr: Both<First, Second> = Both(
+        *transmute::<_, *const First>(a.as_ptr()),
+        *transmute::<_, *const Second>(b.as_ptr()),
+    );
 
     transmute(arr)
 }
