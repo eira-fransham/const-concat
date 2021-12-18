@@ -1,9 +1,4 @@
-#![feature(
-    const_fn,
-    const_fn_union,
-    untagged_unions,
-    const_raw_ptr_deref
-)]
+#![feature(const_fn_trait_bound, untagged_unions, const_raw_ptr_deref)]
 
 pub const unsafe fn transmute<From, To>(from: From) -> To {
     union Transmute<From, To> {
@@ -11,7 +6,12 @@ pub const unsafe fn transmute<From, To>(from: From) -> To {
         to: std::mem::ManuallyDrop<To>,
     }
 
-    std::mem::ManuallyDrop::into_inner(Transmute { from: std::mem::ManuallyDrop::new(from) }.to)
+    std::mem::ManuallyDrop::into_inner(
+        Transmute {
+            from: std::mem::ManuallyDrop::new(from),
+        }
+        .to,
+    )
 }
 
 pub const unsafe fn concat<First, Second, Out>(a: &[u8], b: &[u8]) -> Out
