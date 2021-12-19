@@ -1,4 +1,4 @@
-#![feature(const_fn_trait_bound, untagged_unions, const_raw_ptr_deref)]
+#![feature(const_fn_trait_bound, untagged_unions)]
 
 pub const unsafe fn transmute<From, To>(from: From) -> To {
     union Transmute<From, To> {
